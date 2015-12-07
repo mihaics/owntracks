@@ -3,6 +3,7 @@ package org.owntracks.android.messages;
 import android.util.Log;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.owntracks.android.App;
 import org.owntracks.android.support.MessageLifecycleCallbacks;
 
 public class Message extends MqttMessage {
@@ -78,5 +79,7 @@ public class Message extends MqttMessage {
         this.extra = extra;
     }
 
-
+    public static String getAndroidId() {
+        return App.getAndroidId();
+    }
 }
