@@ -1,35 +1,14 @@
 package org.owntracks.android.services;
 
-import java.util.Date;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
-
-import org.owntracks.android.App;
-import org.owntracks.android.R;
-import org.owntracks.android.db.Dao;
-import org.owntracks.android.db.Waypoint;
-import org.owntracks.android.db.WaypointDao;
-import org.owntracks.android.db.WaypointDao.Properties;
-import org.owntracks.android.messages.TransitionMessage;
-import org.owntracks.android.model.GeocodableLocation;
-import org.owntracks.android.messages.LocationMessage;
-import org.owntracks.android.messages.WaypointMessage;
-import org.owntracks.android.support.Events;
-import org.owntracks.android.support.MessageLifecycleCallbacks;
-import org.owntracks.android.support.Preferences;
-import org.owntracks.android.support.StatisticsProvider;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -42,18 +21,39 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
+import org.owntracks.android.R;
+import org.owntracks.android.db.Dao;
+import org.owntracks.android.db.Waypoint;
+import org.owntracks.android.db.WaypointDao;
+import org.owntracks.android.db.WaypointDao.Properties;
+import org.owntracks.android.messages.LocationMessage;
+import org.owntracks.android.messages.TransitionMessage;
+import org.owntracks.android.messages.WaypointMessage;
+import org.owntracks.android.model.GeocodableLocation;
+import org.owntracks.android.support.Events;
+import org.owntracks.android.support.MessageLifecycleCallbacks;
+import org.owntracks.android.support.Preferences;
+import org.owntracks.android.support.StatisticsProvider;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+
 import de.greenrobot.event.EventBus;
 
 public class ServiceLocator implements ProxyableService, MessageLifecycleCallbacks, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
-    private static final String TAG = "ServiceLocator";
-
     public static final String RECEIVER_ACTION_GEOFENCE_TRANSITION = "org.owntracks.android.RECEIVER_ACTION_GEOFENCE_TRANSITION";
     public static final String RECEIVER_ACTION_LOCATION_CHANGE = "org.owntracks.android.RECEIVER_ACTION_LOCATION_CHANGE";
     public static final String RECEIVER_ACTION_PUBLISH_LASTKNOWN = "org.owntracks.android.RECEIVER_ACTION_PUBLISH_LASTKNOWN";
     public static final String RECEIVER_ACTION_PUBLISH_LASTKNOWN_MANUAL = "org.owntracks.android.RECEIVER_ACTION_PUBLISH_LASTKNOWN_MANUAL";
-    private Date serviceStartDate;
-
+    private static final String TAG = "ServiceLocator";
     GoogleApiClient googleApiClient;
+    private Date serviceStartDate;
     private SharedPreferences sharedPreferences;
 	private OnSharedPreferenceChangeListener preferencesChangedListener;
 	private ServiceProxy context;
@@ -363,7 +363,7 @@ public class ServiceLocator implements ProxyableService, MessageLifecycleCallbac
 
     @Override
     public void onLocationChanged(Location location) {
-
+        String address = null;
 
         if(!isForeground()) {
             StatisticsProvider.setTime(context, StatisticsProvider.SERVICE_LOCATOR_BACKGROUND_LOCATION_LAST_CHANGE);
@@ -371,7 +371,30 @@ public class ServiceLocator implements ProxyableService, MessageLifecycleCallbac
         }
         lastKnownLocation = new GeocodableLocation(location);
 
+
+        Geocoder myLocation = new Geocoder(this.context, Locale.getDefault());
+        List<Address> list = null;
+        try {
+            list = myLocation.getFromLocation(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude(), 1);
+            if (list != null && list.size() > 0) {
+                Address loc = list.get(0);
+                String addressText = String.format("%s, %s, %s",
+                        loc.getMaxAddressLineIndex() > 0 ? loc.getAddressLine(0) : "",
+                        loc.getLocality(), // location.getAdminArea(),
+                        loc.getCountryName());
+                address = addressText;
+            } else
+                address = "n/a";
+        } catch (IOException e) {
+
+
+        }
+
+        lastKnownLocation.setAddress(address);
+
+
         EventBus.getDefault().postSticky(new Events.CurrentLocationUpdated(lastKnownLocation));
+
 
         if (shouldPublishLocation())
             publishLocationMessage();
