@@ -1,9 +1,11 @@
 package org.owntracks.android.services;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -25,6 +27,8 @@ import org.owntracks.android.support.StatisticsProvider;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -363,13 +367,34 @@ public class ServiceLocator implements ProxyableService, MessageLifecycleCallbac
 
     @Override
     public void onLocationChanged(Location location) {
-
+        String address = null;
 
         if(!isForeground()) {
             StatisticsProvider.setTime(context, StatisticsProvider.SERVICE_LOCATOR_BACKGROUND_LOCATION_LAST_CHANGE);
             StatisticsProvider.incrementCounter(context, StatisticsProvider.SERVICE_LOCATOR_BACKGROUND_LOCATION_CHANGES);
         }
         lastKnownLocation = new GeocodableLocation(location);
+
+        Geocoder myLocation = new Geocoder(this.context, Locale.getDefault());
+        List<Address> list = null;
+        try {
+            list = myLocation.getFromLocation(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude(), 1);
+            if (list != null && list.size() > 0) {
+                Address loc = list.get(0);
+                String addressText = String.format("%s, %s, %s",
+                        loc.getMaxAddressLineIndex() > 0 ? loc.getAddressLine(0) : "",
+                        loc.getLocality(), // location.getAdminArea(),
+                        loc.getCountryName());
+                address= addressText;
+            }
+            else
+                address= "n/a";
+        } catch (IOException e) {
+
+
+        }
+
+        lastKnownLocation.setAddress(address);
 
         EventBus.getDefault().postSticky(new Events.CurrentLocationUpdated(lastKnownLocation));
 

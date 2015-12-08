@@ -21,6 +21,7 @@ public class GeocodableLocation extends Location implements ILatLng {
     private String tag;
     private Object extra;
     private Date date;
+	private String address;
 
 	public String getTag() {
 		return this.tag;
@@ -200,4 +201,11 @@ public class GeocodableLocation extends Location implements ILatLng {
 		return new Date(getLocation().getTime());
 	}
 
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getAddress() {
+		return address;
+	}
 }

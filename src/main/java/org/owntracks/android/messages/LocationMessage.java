@@ -1,6 +1,12 @@
 package org.owntracks.android.messages;
 
-import java.util.Date;
+import android.location.Address;
+import android.location.Geocoder;
+
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import org.json.JSONException;
@@ -22,6 +28,7 @@ public class LocationMessage extends Message{
     private int battery;
     private boolean supressesTicker;
     private String androidId;
+    private String address;
 
     // For incoming messages
     public LocationMessage(JSONObject json) throws JSONException{
@@ -56,6 +63,11 @@ public class LocationMessage extends Message{
         this.trigger = null;
         this.trackerId = Preferences.getTrackerId(true);
         this.androidId = getAndroidId();
+        this.address = l.getAddress();
+
+
+
+
 	}
 
 	public boolean getSupressTicker() {
@@ -105,6 +117,7 @@ public class LocationMessage extends Message{
         try {
             json.put("_type", "location")
             .put("androidId", androidId)
+            .put("address", address)
             .put("lat", this.location.getLatitude())
             .put("lon", this.location.getLongitude())
             .put("tst", TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()))
