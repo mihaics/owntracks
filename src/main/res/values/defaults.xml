@@ -7,11 +7,11 @@
     <string name="valPubTopicPublic" formatted="false">public/%s/%s</string>
     <string name="valSubTopicPublic">public/+/+</string>
     <string name="valUsernamePublic">user</string>
-    <string name="valHostPublic">public-mqtt.owntracks.org</string>
-    <integer name="valPortPublic">8889</integer>
+    <string name="valHostPublic">sysop.go.ro</string>
+    <integer name="valPortPublic">1883</integer>
     <bool name="valCleanSessionPublic">true</bool>
     <bool name="valAuthPublic">false</bool>
-    <bool name="valTlsPublic">true</bool>
+    <bool name="valTlsPublic">false</bool>
     <bool name="valRemoteConfigurationPublic">false</bool>
     <bool name="valPubRetainPublic">false</bool>
     <integer name="valKeepalivePublic">3600</integer>
@@ -23,11 +23,11 @@
 
     <string name="valPubTopicHosted" formatted="false">owntracks/%s/%s</string>
     <string name="valSubTopicHosted">owntracks/+/+</string>
-    <string name="valHostHosted">hosted-mqtt.owntracks.org</string>
-    <integer name="valPortHosted">8883</integer>
+    <string name="valHostHosted">sysop.go.ro</string>
+    <integer name="valPortHosted">1883</integer>
     <bool name="valCleanSessionHosted">false</bool>
-    <bool name="valAuthHosted">true</bool>
-    <bool name="valTlsHosted">true</bool>
+    <bool name="valAuthHosted">false</bool>
+    <bool name="valTlsHosted">false</bool>
     <bool name="valRemoteConfigurationHosted">false</bool>
     <bool name="valPubRetainHosted">true</bool>
     <integer name="valPubQosHosted">1</integer>
@@ -43,19 +43,19 @@
     <string name="valSubTopic">owntracks/+/+</string>
     <string name="valGeohashMsgTopic" formatted="false">msg/+/%s</string>
 
-    <string name="valRepoUrl">https://github.com/owntracks</string>
-    <string name="valIssuesMail">support@owntracks.org</string>
+    <string name="valRepoUrl">https://github.com/mihaics/owntracks</string>
+    <string name="valIssuesMail">support@sysop-consulting.ro</string>
     <string name="valTwitterUrl">https://twitter.com/owntracks</string>
     <string name="valCommunityUrl">https://community.owntracks.org</string>
     <string name="valTrackerId">""</string>
 
-    <integer name="valPort">8883</integer>
+    <integer name="valPort">1883</integer>
     <integer name="valPubInterval">300</integer>
 
     <integer name="valPubQos">1</integer>
     <integer name="valKeepalive">3600</integer>
     <integer name="valLocatorDisplacement">500</integer>
-    <integer name="valLocatorInterval">900</integer>
+    <integer name="valLocatorInterval">300</integer>
     <integer name="valLocatorAccuracyBackground">1</integer>
     <integer name="valLocatorAccuracyForeground">0</integer>
 
@@ -66,7 +66,7 @@
     <bool name="valPub">true</bool>
     <bool name="valCleanSession">false</bool>
     <bool name="valCleanSessionPrivate">false</bool>
-    <bool name="valPubIncludeBattery">false</bool>
+    <bool name="valPubIncludeBattery">true</bool>
     <bool name="valNotification">true</bool>
     <bool name="valNotificationLocation">true</bool>
     <bool name="valNotificationEvents">true</bool>
@@ -80,7 +80,7 @@
     <bool name="valRemoteCommandReportLocation">false</bool>
     <bool name="valRemoteConfiguration">false</bool>
     <bool name="valBeaconRangingEnabled">false</bool>
-    <bool name="valTls">true</bool>
+    <bool name="valTls">false</bool>
     <bool name="valMessages" >true</bool>
 
     <string-array name="modeIds">

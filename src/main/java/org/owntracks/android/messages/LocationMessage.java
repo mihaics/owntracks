@@ -21,6 +21,7 @@ public class LocationMessage extends Message{
     private String trigger;
     private int battery;
     private boolean supressesTicker;
+    private String androidId;
 
     // For incoming messages
     public LocationMessage(JSONObject json) throws JSONException{
@@ -38,6 +39,10 @@ public class LocationMessage extends Message{
            setTrackerId(json.getString("tid"));
         } catch (Exception e) { }
 
+        try {
+            setAndroidId(json.getString("androidId"));
+        } catch (Exception e) { }
+
     }
 
     // For outgoing messages
@@ -50,6 +55,7 @@ public class LocationMessage extends Message{
         this.trackerId = null;
         this.trigger = null;
         this.trackerId = Preferences.getTrackerId(true);
+        this.androidId = getAndroidId();
 	}
 
 	public boolean getSupressTicker() {
@@ -84,6 +90,10 @@ public class LocationMessage extends Message{
         return this.location;
     }
 
+    public void setAndroidId(String androidId) {
+        this.androidId = androidId;
+    }
+
     @Override
 	public String toString() {
 		return this.toJSONObject().toString();
@@ -94,6 +104,7 @@ public class LocationMessage extends Message{
 
         try {
             json.put("_type", "location")
+            .put("androidId", androidId)
             .put("lat", this.location.getLatitude())
             .put("lon", this.location.getLongitude())
             .put("tst", TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()))
@@ -113,4 +124,6 @@ public class LocationMessage extends Message{
         }
         return json;
     }
+
+
 }
