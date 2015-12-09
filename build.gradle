@@ -23,7 +23,8 @@ repositories {
     maven { url 'https://repo.eclipse.org/content/repositories/paho-releases/' }
     maven { url 'http://jcenter.bintray.com'}
     maven { url 'https://maven.fabric.io/public' }
-    maven { url 'https://jitpack.io' }
+    maven { url "https://jitpack.io" }
+
     flatDir {
         dirs 'libs'
     }
@@ -57,8 +58,10 @@ dependencies {
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
     compile 'com.mikepenz:fontawesome-typeface:4.4.0.1@aar'
     compile('com.mikepenz:materialdrawer:3.0.6@aar') { transitive = true }
-    compile 'com.afollestad:material-dialogs:0.7.9.1'
-    //compile 'com.afollestad:material-dialogs:0.8.5.2'
+    //compile 'com.afollestad:material-dialogs:0.7.9.1'
+    compile('com.github.afollestad.material-dialogs:commons:0.8.5.2@aar') {
+        transitive = true
+    }
     compile 'com.joanzapata.android:android-iconify:1.0.10'
     compile 'com.github.monxalo:android-section-adapter:1.0.1@jar'
     compile 'com.obsez.android.lib.filechooser:filechooser:1.1.2'
@@ -92,9 +95,11 @@ android {
     }
     buildTypes {
         release {
-            ext.enableCrashlytics = true
+            buildConfigField "String", "MAPBOX_API_KEY", mapbox_api_key
+            ext.enableCrashlytics = false
         }
         debug {
+            buildConfigField "String", "MAPBOX_API_KEY", mapbox_api_key
             ext.enableCrashlytics = false
         }
     }
