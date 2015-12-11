@@ -1,8 +1,6 @@
 package org.owntracks.android;
 
 
-import com.crashlytics.android.Crashlytics;
-import io.fabric.sdk.android.Fabric;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -10,7 +8,6 @@ import java.util.HashMap;
 import org.owntracks.android.db.ContactLinkDao;
 import org.owntracks.android.db.Dao;
 import org.owntracks.android.db.DaoMaster;
-import org.owntracks.android.db.DaoSession;
 import org.owntracks.android.db.MessageDao;
 import org.owntracks.android.db.WaypointDao;
 import org.owntracks.android.model.Contact;
@@ -31,11 +28,9 @@ import android.os.BatteryManager;
 import android.os.Bundle;
 import android.provider.Settings.Secure;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.CustomEvent;
-import com.crashlytics.android.core.CrashlyticsCore;
+
+
 import com.google.android.gms.maps.MapsInitializer;
 
 import de.greenrobot.event.EventBus;
@@ -67,11 +62,11 @@ public class App extends Application  {
 		super.onCreate();
         instance = this;
 
-        Fabric.with(this, new Crashlytics.Builder().core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build()).build(), new Answers());
+        //Fabric.with(this, new Crashlytics.Builder().core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build()).build(), new Answers());
         Preferences.initialize(this);
 
         StatisticsProvider.setTime(this, StatisticsProvider.APP_START);
-        Answers.getInstance().logCustom(new CustomEvent("App started").putCustomAttribute("mode", Preferences.getModeId()));
+        //Answers.getInstance().logCustom(new CustomEvent("App started").putCustomAttribute("mode", Preferences.getModeId()));
 
         DaoMaster.OpenHelper helper = new DaoMaster.OpenHelper(this, "org.owntracks.android.db", null) {
             @Override

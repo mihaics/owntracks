@@ -17,8 +17,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.CustomEvent;
+
 
 import org.json.JSONException;
 
@@ -972,7 +971,7 @@ public class Preferences {
             sharedPreferences.edit().putBoolean(getKey(R.string.keyFistStart), false).commit();
             String uuid = UUID.randomUUID().toString().toUpperCase();
             sharedPreferences.edit().putString(getKey(R.string.keyDeviceUUID), "A"+uuid.substring(1)).commit();
-            Answers.getInstance().logCustom(new CustomEvent("App installed"));
+
             return true;
         } else {
             Log.v(TAG, "Consecutive application launch");
