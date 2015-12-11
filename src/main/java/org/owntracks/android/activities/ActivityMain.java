@@ -636,7 +636,7 @@ public class ActivityMain extends ActivityBase {
 
             this.mapView = (com.mapbox.mapboxsdk.views.MapView) v.findViewById(R.id.mapView);
             this.mapView.setAccessToken(getString(R.string.MAPBOX_API_KEY));
-            this.mapView.setTileSource(new MapboxTileLayer("binarybucks.nfc70b7d"));
+            this.mapView.setTileSource(new MapboxTileLayer(getString(R.string.MAPBOX_STYLE)));
             this.mapView.setDiskCacheEnabled(true);
             this.mapView.setUserLocationEnabled(false);
 

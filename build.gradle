@@ -97,10 +97,12 @@ android {
         release {
             println mapbox_api_key
             resValue "string", "MAPBOX_API_KEY", mapbox_api_key
+            resValue "string", "MAPBOX_STYLE", mapbox_style
             ext.enableCrashlytics = false
         }
         debug {
             resValue "string", "MAPBOX_API_KEY", mapbox_api_key
+            resValue "string", "MAPBOX_STYLE", mapbox_style
             ext.enableCrashlytics = false
         }
     }

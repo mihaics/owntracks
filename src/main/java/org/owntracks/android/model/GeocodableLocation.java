@@ -1,8 +1,10 @@
 package org.owntracks.android.model;
 
+import android.annotation.SuppressLint;
 import android.location.Location;
 import android.util.Log;
-
+import android.os.Parcel;
+import android.os.Parcelable;
 import com.mapbox.mapboxsdk.api.ILatLng;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
@@ -13,6 +15,7 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 
+@SuppressLint("ParcelCreator")
 public class GeocodableLocation extends Location implements ILatLng {
 	private static final String TAG = "GeocodableLocation";
 
@@ -20,7 +23,6 @@ public class GeocodableLocation extends Location implements ILatLng {
     private LatLng latlng;
     private String tag;
     private Object extra;
-    private Date date;
     private String address;
 
     public GeocodableLocation(JSONObject json) throws JSONException {
@@ -88,6 +90,7 @@ public class GeocodableLocation extends Location implements ILatLng {
         Integer acc;
         Long tst;
         Double alt;
+        String adr;
 
         try {
             String type = json.getString("_type");
@@ -129,13 +132,19 @@ public class GeocodableLocation extends Location implements ILatLng {
             alt = (double) 0;
         }
 
+        try {
+            adr = json.getString("address");
+        } catch (Exception e) {
+            adr = "n/a";
+        }
+
         GeocodableLocation l = new GeocodableLocation("mqttitude-deserialized");
         l.setLatitude(lat);
         l.setLongitude(lon);
         l.setAccuracy(acc);
         l.setTime(tst);
         l.setAltitude(alt);
-
+        l.setAddress(adr);
         return l;
     }
 
@@ -189,7 +198,11 @@ public class GeocodableLocation extends Location implements ILatLng {
 			return toLatLonString();
 	}
 
-	public String toLatLonString() {
+
+
+
+
+    public String toLatLonString() {
 		return getLatitude() + " : " + getLongitude();
 	}
 
